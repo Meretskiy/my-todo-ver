@@ -27,9 +27,9 @@ public class NoteController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createNote(Principal principal, @RequestParam String article) {
+    public ResponseEntity<?> createNote(Principal principal) {
         try {
-            return new ResponseEntity<>(noteService.createNote(principal.getName(), article), HttpStatus.CREATED);
+            return new ResponseEntity<>(noteService.createNote(principal.getName()), HttpStatus.CREATED);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(new TodoverError(HttpStatus.BAD_REQUEST.value(),
                     "User not found"), HttpStatus.BAD_REQUEST);

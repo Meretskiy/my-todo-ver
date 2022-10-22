@@ -25,10 +25,10 @@ public class NoteService {
                 .collect(Collectors.toList());
     }
 
-    public NoteDto createNote(String userName, String article) {
+    public NoteDto createNote(String userName) {
         User user = userService.findByUsername(userName)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        Note note = new Note(user, article);
+        Note note = new Note(user, "");
         noteRepository.save(note);
         return new NoteDto(note);
     }
