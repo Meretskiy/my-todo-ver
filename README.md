@@ -3,6 +3,45 @@ Application for maintaining a to-do list.
 The functionality allows you to create a user and log in. 
 After authorization: you can add notes, delete, edit, you can mark the note as completed and get the entire list of notes.
 
+## Getting Started
+
+#### To run app, you can use a pre-built Docker image or build it locally.
+
+https://hub.docker.com/r/meretskiy/my-todo-ver-0.0.1
+
+#### Launch Docker container in the background:
+
+ - Build and run jar:
+
+```
+./mvnw package && java -jar target/my-todo-ver-0.0.1-SNAPSHOT.jar
+```
+
+ - Build docker image:
+
+```
+docker build -t my-todo-ver-0.0.1 .
+```
+
+ - Run docker image:
+
+```
+docker run -d -p 8189:8189 -t my-todo-ver-0.0.1
+```
+
+- Fast test:
+
+```
+curl --location --request POST 'http://localhost:8189/todover/api/v1/user/authentication' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+"username": "BillyBones",
+"password": "100"
+}'
+```
+
+Web interface is not ready yet, you can test the api using postman.
+
 ### Stack:
  - Java 11
  - Spring-Boot
@@ -155,7 +194,7 @@ id note
 ```
 
 ### TODO:
- - packing in docker
+
  - add logging
  - add validation
  - finalize the separation of roles paid / free user
