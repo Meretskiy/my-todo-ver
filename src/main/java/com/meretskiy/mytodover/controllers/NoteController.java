@@ -4,6 +4,7 @@ import com.meretskiy.mytodover.dto.NoteDto;
 import com.meretskiy.mytodover.exceptions_handling.AccessDeniedException;
 import com.meretskiy.mytodover.exceptions_handling.ResourceNotFoundException;
 import com.meretskiy.mytodover.exceptions_handling.TodoverError;
+import com.meretskiy.mytodover.model.Note;
 import com.meretskiy.mytodover.services.NoteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/notes")
@@ -23,13 +25,16 @@ public class NoteController {
 
     @GetMapping
     public ResponseEntity<?> getCurrentUserNotes(Principal principal) {
-        return ResponseEntity.ok(noteService.findAllNotesByOwnerName(principal.getName()));
+        return ResponseEntity.ok(noteService.findAllNotesByOwnerName(principal.getName()).stream()
+                .map(NoteDto::new)
+                .collect(Collectors.toList()));
     }
 
     @PostMapping
     public ResponseEntity<?> createNote(Principal principal) {
         try {
-            return new ResponseEntity<>(noteService.createNote(principal.getName()), HttpStatus.CREATED);
+            Note note = noteService.createNote(principal.getName());
+            return new ResponseEntity<>(new NoteDto(note), HttpStatus.CREATED);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(new TodoverError(HttpStatus.BAD_REQUEST.value(),
                     "User not found"), HttpStatus.BAD_REQUEST);
@@ -39,7 +44,8 @@ public class NoteController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getNoteById(Principal principal, @PathVariable Long id) {
         try {
-            return ResponseEntity.ok(noteService.findNoteById(principal.getName(), id));
+            Note note = noteService.findNote(principal.getName(), id);
+            return ResponseEntity.ok(new NoteDto(note));
         } catch (AccessDeniedException e) {
             return new ResponseEntity<>(new TodoverError(HttpStatus.FORBIDDEN.value(),
                     "Requesting another user's data"), HttpStatus.FORBIDDEN);
@@ -52,7 +58,8 @@ public class NoteController {
     @PostMapping("/update")
     public ResponseEntity<?> updateNote(Principal principal, @RequestBody NoteDto noteDto) {
         try {
-            return ResponseEntity.ok(noteService.updateNote(principal.getName(), noteDto));
+            Note note = noteService.updateNote(principal.getName(), noteDto);
+            return ResponseEntity.ok(new NoteDto(note));
         } catch (AccessDeniedException e) {
             return new ResponseEntity<>(new TodoverError(HttpStatus.FORBIDDEN.value(),
                     "Requesting another user's data"), HttpStatus.FORBIDDEN);
@@ -62,7 +69,7 @@ public class NoteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNoteById(Principal principal, @PathVariable Long id) {
         try {
-            noteService.deleteNoteById(principal.getName(), id);
+            noteService.deleteNote(principal.getName(), id);
             return ResponseEntity.ok().build();
         } catch (AccessDeniedException e) {
             return new ResponseEntity<>(new TodoverError(HttpStatus.FORBIDDEN.value(),

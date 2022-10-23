@@ -1,9 +1,9 @@
 ## Server side application: myTODOver
 Application for maintaining a to-do list.
 The functionality allows you to create a user and log in. 
-After authorization, you can add notes, delete, edit, you can mark the note as completed and get the entire list of notes.
+After authorization: you can add notes, delete, edit, you can mark the note as completed and get the entire list of notes.
 
-###Stack:
+### Stack:
  - Java 11
  - Spring-Boot
  - Spring-Web
@@ -18,9 +18,9 @@ After authorization, you can add notes, delete, edit, you can mark the note as c
  - Maven  
  - Docker
 
-###Api documentation:
+### Api documentation:
 
-- ####Registration in the application:
+- #### Registration in the application:
 
  @POST http://localhost:8189/todover/api/v1/user/registration
 
@@ -35,7 +35,7 @@ request:
 ```
 
 
- - ####Authorization and obtaining a token:
+ - #### Authorization and obtaining a token:
 
 @POST http://localhost:8189/todover/api/v1/user/authentication
 
@@ -58,7 +58,7 @@ response:
 
 This Bearer Token is used in all API requests.
 
- - ####Getting the entire list of notes for a given user:
+ - #### Getting the entire list of notes for a given user:
 
 @GET http://localhost:8189/todover/api/v1/notes
 
@@ -90,7 +90,7 @@ response:
 ]
 ```
 
- - ####Create a new note:
+ - #### Create a new note:
 
 @POST http://localhost:8189/todover/api/v1/notes
 
@@ -106,7 +106,7 @@ response:
 }
 ```
 
- - ####Select note:
+ - #### Select note:
 
 @GET http://localhost:8189/todover/api/v1/notes/{id}
 
@@ -128,7 +128,7 @@ response:
 }
 ```
 
- - ####Editing a note / changing the progress status
+ - #### Editing a note / changing the progress status
 
 @POST http://localhost:8189/todover/api/v1/notes/update
 
@@ -144,7 +144,7 @@ request and response:
 }
 ```
 
- - ####Deleting a note:
+ - #### Deleting a note:
 
 @DELETE http://localhost:8189/todover/api/v1/notes/{id}
 
@@ -154,10 +154,8 @@ request:
 id note
 ```
 
-###TODO:
- - add tests
+### TODO:
  - packing in docker
-   
  - add logging
  - add validation
  - finalize the separation of roles paid / free user
